@@ -1,0 +1,8 @@
+# Ignore environment and credentials files
+.env
+details.json
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db

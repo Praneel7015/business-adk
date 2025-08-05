@@ -1,0 +1,11 @@
+google-adk[database]
+yfinance==0.2.56
+psutil==5.9.5
+litellm==1.66.3
+google-generativeai==0.8.5
+deprecated
+python-dotenv==1.1.0
+google-api-python-client==2.108.0
+google-auth==2.23.4
+google-auth-oauthlib==1.1.0
+google-auth-httplib2==0.1.1
