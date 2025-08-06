@@ -55,7 +55,6 @@ GOOGLE_GENAI_USE_VERTEXAI=FALSE
 DELEGATED_USER=emailidhere
 ```
 
-
 ### 3. Set up OAuth Client ID for Gmail/Calendar API
 
 #### a. Create an OAuth Client ID
@@ -104,7 +103,6 @@ Then Click the link shown as follows
 +-----------------------------------------------------------------------------+
 ```
 or goto [http://localhost:8000.](http://localhost:8000)
-
 
 ## Agent Integration: Sending Emails and Events from Other Agents
 
