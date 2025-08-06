@@ -50,8 +50,9 @@ cd business-adk
 ### 2. Create a `.env` file
 In the root directory, add:
 ```env
-DELEGATED_USER=your-email@yourdomain.com
-# Add other environment variables as needed
+GOOGLE_API_KEY=putyourkeyhere
+GOOGLE_GENAI_USE_VERTEXAI=FALSE
+DELEGATED_USER=emailidhere
 ```
 
 
@@ -74,30 +75,43 @@ DELEGATED_USER=your-email@yourdomain.com
 1. When you run the agent, a browser window will open for you to log in and authorize Gmail/Calendar access.
 2. A `token.pickle` file will be created to store your credentials for future use.
 
-### 4. Install dependencies
-```sh
+### 4. Setup Virtual Environment
+```terminal
+python -m venv .venv  
+```
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### 5. Install dependencies
+```(.venv) sh
 pip install -r requirements.txt
 ```
 
-### 5. Run the project
-Run as per your agent entrypoint (see `manager/agent.py`).
+### 6. Run Project
+
+```(.venv) sh
+adk web
+```
+
+Then Click the link shown as follows
+
+```adk
++-----------------------------------------------------------------------------+
+| ADK Web Server started                                                      |
+|                                                                             |
+| For local testing, access at http://localhost:8000.                         |
++-----------------------------------------------------------------------------+
+```
+or goto [http://localhost:8000.](http://localhost:8000)
+
 
 ## Agent Integration: Sending Emails and Events from Other Agents
 
 - The communication agent exposes tools for sending emails, scheduling calendar events, and creating meeting invitations.
 - Other agents (financial, sales, inventory, purchase) can delegate tasks to the communication agent to send emails or create events based on business logic or user requests.
 - Example: The sales agent can generate a report and instruct the communication agent to email it to a user.
-
-## Usage
-
-### 4. Install dependencies
-```sh
-pip install -r requirements.txt
-```
-
-### 5. Run the project
-Run as per your agent entrypoint (see `manager/agent.py`).
-
+  
 ## Usage
 
 - Use the communication agent to send emails or schedule calendar events via Google APIs.
@@ -110,21 +124,9 @@ Run as per your agent entrypoint (see `manager/agent.py`).
 - Never share your `details.json` or `.env` files publicly.
 - For Google API integration, ensure your service account has domain-wide delegation enabled and the correct scopes set in the Google Admin Console.
 
-## Example `.env` file
-
-```
-DELEGATED_USER=your-email@yourdomain.com
-# Add other environment variables as needed
-```
-
-## Example Prompts
-
-See `examples.md` for a list of sample questions and commands you can use with each agent.
-
 ## Contributing
 
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-## License
-
-This project is for educational and demonstration purposes.
+## Special Thanks to
+Chatgpt (Formatting, Function Fixing and Error Handling)
