@@ -54,44 +54,41 @@ DELEGATED_USER=your-email@yourdomain.com
 # Add other environment variables as needed
 ```
 
-### 3. Set up Google Service Account for Gmail/Calendar API
 
-#### a. Create a Service Account
+### 3. Set up OAuth Client ID for Gmail/Calendar API
+
+#### a. Create an OAuth Client ID
 1. Go to [Google Cloud Console](https://console.cloud.google.com/).
 2. Select your project or create a new one.
-3. Go to **IAM & Admin > Service Accounts**.
-4. Click **Create Service Account**. Give it a name and click **Create and Continue**.
-5. Grant the service account the role: **Project > Editor** (or more restrictive as needed).
-6. Click **Done**.
+3. Go to **APIs & Services > Credentials**.
+4. Click **Create Credentials > OAuth client ID**.
+5. For **Application type**, select **Desktop app**.
+6. Give it a name (e.g., "Business Manager Desktop") and click **Create**.
+7. Download the credentials file (e.g., `client_secret_XXXX.json`). Rename it to `details.json` and place it in your project root.
 
-#### b. Create and Download Service Account Key
-1. In the Service Accounts list, click your new account.
-2. Go to the **Keys** tab.
-3. Click **Add Key > Create new key**.
-4. Choose **JSON** and click **Create**. Download the file as `details.json` and place it in your project root.
-
-#### c. Enable Gmail and Calendar APIs
+#### b. Enable Gmail and Calendar APIs
 1. In Google Cloud Console, go to **APIs & Services > Library**.
 2. Enable **Gmail API** and **Google Calendar API** for your project.
 
-#### d. Enable Domain-Wide Delegation (for Workspace accounts)
-1. In Service Accounts, click your account.
-2. Click **Show domain-wide delegation** and enable it.
-3. Note the **Client ID** shown.
+#### c. First Run: User Consent
+1. When you run the agent, a browser window will open for you to log in and authorize Gmail/Calendar access.
+2. A `token.pickle` file will be created to store your credentials for future use.
 
-#### e. Grant API Scopes in Google Admin Console
-1. Go to [Google Admin Console](https://admin.google.com/) (requires super admin).
-2. Go to **Security > API Controls > Domain-wide Delegation**.
-3. Click **Add new** and enter:
-   - **Client ID:** (from previous step)
-   - **OAuth Scopes:**
-     ```
-     https://www.googleapis.com/auth/gmail.send,https://www.googleapis.com/auth/gmail.compose,https://www.googleapis.com/auth/gmail.modify,https://www.googleapis.com/auth/calendar
-     ```
-4. Save.
+### 4. Install dependencies
+```sh
+pip install -r requirements.txt
+```
 
-#### f. Set DELEGATED_USER
-In your `.env`, set `DELEGATED_USER` to the email address of a real user in your Google Workspace domain (not the service account email).
+### 5. Run the project
+Run as per your agent entrypoint (see `manager/agent.py`).
+
+## Agent Integration: Sending Emails and Events from Other Agents
+
+- The communication agent exposes tools for sending emails, scheduling calendar events, and creating meeting invitations.
+- Other agents (financial, sales, inventory, purchase) can delegate tasks to the communication agent to send emails or create events based on business logic or user requests.
+- Example: The sales agent can generate a report and instruct the communication agent to email it to a user.
+
+## Usage
 
 ### 4. Install dependencies
 ```sh

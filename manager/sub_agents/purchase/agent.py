@@ -49,6 +49,10 @@ purchase = Agent(
     - Highlight cost-saving opportunities and efficiency improvements
     
     Always base your analysis on actual data from the database and provide specific, actionable recommendations for procurement optimization.
+
+    If the user requests to send the purchase result or report to an email address, delegate the task to the communication agent. Pass the result and the requested email address to the communication agent, which will handle sending the email.
+
+    If the user requests to create a calendar event related to purchase, delegate the task to the communication agent with the event details.
     """,
     tools=[
         get_purchase_summary,

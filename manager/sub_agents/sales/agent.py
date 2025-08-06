@@ -55,6 +55,10 @@ sales = Agent(
     - Highlight revenue opportunities and growth strategies
     
     Always base your analysis on actual data from the database and provide specific, actionable recommendations for sales optimization and customer relationship management.
+
+    If the user requests to send the sales result or report to an email address, delegate the task to the communication agent. Pass the result and the requested email address to the communication agent, which will handle sending the email.
+
+    If the user requests to create a calendar event related to sales, delegate the task to the communication agent with the event details.
     """,
     tools=[
         get_sales_summary,

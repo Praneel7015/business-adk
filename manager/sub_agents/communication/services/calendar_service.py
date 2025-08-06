@@ -1,38 +1,38 @@
-from google.oauth2 import service_account
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import logging
 import os
+import pickle
 from ..config.scopes import SCOPES
-from ..config.settings import SERVICE_ACCOUNT_FILE, DELEGATED_USER
 
 logger = logging.getLogger(__name__)
 
+OAUTH_CLIENT_SECRETS = "details.json"  # Path to your OAuth client secrets file
+TOKEN_PICKLE = "token.pickle"  # Where to store the user's access/refresh token
+
 def get_calendar_service():
-    """Create and return a Google Calendar service object using service account credentials."""
-    try:
-        # Get the absolute path to the service account file
-        if os.path.exists(SERVICE_ACCOUNT_FILE):
-            service_account_path = SERVICE_ACCOUNT_FILE
+    """Create and return a Google Calendar service object using OAuth 2.0 user credentials."""
+    creds = None
+    # Try to load existing token
+    if os.path.exists(TOKEN_PICKLE):
+        with open(TOKEN_PICKLE, "rb") as token:
+            creds = pickle.load(token)
+    # If no valid creds, start OAuth flow
+    if not creds or not creds.valid:
+        from google.auth.transport.requests import Request
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
         else:
-            # Try relative path from project root
-            service_account_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", SERVICE_ACCOUNT_FILE)
-        
-        if not os.path.exists(service_account_path):
-            raise FileNotFoundError(f"Service account file not found: {service_account_path}")
-        
-        # Load service account credentials with optional delegation
-        credentials = service_account.Credentials.from_service_account_file(
-            service_account_path,
-            scopes=SCOPES
-        )
-        # Use domain-wide delegation if DELEGATED_USER is set
-        if DELEGATED_USER:
-            credentials = credentials.with_subject(DELEGATED_USER)
-        service = build("calendar", "v3", credentials=credentials)
-        logger.info("Google Calendar service created successfully (delegation: %s)", DELEGATED_USER)
+            flow = InstalledAppFlow.from_client_secrets_file(OAUTH_CLIENT_SECRETS, SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open(TOKEN_PICKLE, "wb") as token:
+            pickle.dump(creds, token)
+    try:
+        service = build("calendar", "v3", credentials=creds)
+        logger.info("Google Calendar service created successfully (OAuth user)")
         return service
-        
     except Exception as e:
         logger.error(f"Failed to create Calendar service: {e}")
         raise Exception(f"Calendar service initialization failed: {str(e)}")
